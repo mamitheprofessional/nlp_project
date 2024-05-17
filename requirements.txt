@@ -1,0 +1,5 @@
+textblob
+nltk
+matplotlib
+python-Levenshtein
+customtkinter
