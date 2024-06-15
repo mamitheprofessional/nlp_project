@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import scrolledtext  
 import Levenshtein
 from tkinter import messagebox
+from tkinter import filedialog 
 
 
 
@@ -108,6 +109,11 @@ class App(customtkinter.CTk):
         self.tema_menu = customtkinter.CTkOptionMenu(self.sol_frame, values=["Light", "Dark", "System"], command=self.tema_mod_sec)
         self.tema_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
+        self.kilavuz_button = customtkinter.CTkButton(self.sol_frame, height=40, text="Kullanım Kılavuzu",
+                                    fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),anchor="w", command=self.kullanim_kilavuzu)
+        self.kilavuz_button.grid(row=2, column=0, sticky="ew", pady=(10, 0))
+
+
 
 
         # ana frame kısmı
@@ -116,6 +122,14 @@ class App(customtkinter.CTk):
 
         self.analiz_buton_tanim = customtkinter.CTkButton(self.ana_frame, text="Analiz Yap" ,command=self.analiz_yap)
         self.analiz_buton_tanim.grid(row=3, column=1, padx=20, pady=10)
+
+        self.dosya_ac_buton = customtkinter.CTkButton(self.ana_frame, text="aç" ,command=self.dosya_ac)
+        self.dosya_ac_buton.grid(row=4, column=1, padx=50, pady=10)
+
+        self.dosya_kaydet_buton = customtkinter.CTkButton(self.ana_frame, text="kaydet" ,command=self.dosya_kaydet)
+        self.dosya_kaydet_buton.grid(row=5, column=1, padx=80, pady=10)
+
+
 
         self.benzerlik_checkbutton()  # checkbuttonu çağırmak için
 
@@ -226,11 +240,11 @@ class App(customtkinter.CTk):
     def dosya_secimi(self):
         secili_dosya = self.secim.get()
         if secili_dosya == 1:
-            dosya_yolu = "/home/noctt137/Masaüstü/nlp projesi/nlp_project/text_belgeler/alice.txt"
+            dosya_yolu = "/home/noctt137/Masaüstü/asd/text_belgeler/alice.txt"
         elif secili_dosya == 2:
-            dosya_yolu = "/home/noctt137/Masaüstü/nlp projesi/nlp_project/text_belgeler/hamlet.txt"
+            dosya_yolu = "/home/noctt137/Masaüstü/asd/text_belgeler/hamlet.txt"
         else:
-            dosya_yolu = "/home/noctt137/Masaüstü/nlp projesi/nlp_project/text_belgeler/macbeth.txt"
+            dosya_yolu = "/home/noctt137/Masaüstü/asd/text_belgeler/macbeth.txt"
         dosya_metni = self.dosyadan_metin_oku(dosya_yolu)
         self.text_input.delete('1.0', tk.END)
         self.text_input.insert(tk.END, dosya_metni)
@@ -252,6 +266,41 @@ class App(customtkinter.CTk):
 
         self.dosya_secim_3 = customtkinter.CTkRadioButton(self.ana_frame, text="Macbeth", variable=self.secim, value=3, command=self.dosya_secimi)
         self.dosya_secim_3.grid(row=3, column=1, sticky="w", padx=220)
+
+
+    def dosya_ac(self):
+        dosya_yolu = filedialog.askopenfilename(defaultextension=".txt", filetypes=[("Text Dosyası", "*.txt")])
+        if dosya_yolu:
+            with open(dosya_yolu, "r", encoding="utf-8") as file:
+                self.text_input.delete(1.0, tk.END)
+                self.text_input.insert(tk.END, file.read())
+
+    def dosya_kaydet(self):
+        dosya_yolu = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Dosyası", "*.txt")])
+        if dosya_yolu:
+            with open(dosya_yolu, "w", encoding="utf-8") as file:
+                file.write(self.text_input.get(1.0, tk.END))
+
+
+    def kullanim_kilavuzu(self):
+        mesaj = (
+            "NLP Uygulaması Kullanım Kılavuzu:\n\n"
+            "1. Metin Analiz:\n"
+            "   - 'Metin Analiz' butonuna tıklayın ve metninizi girin.\n"
+            "   - 'Analiz Yap' butonuna tıklayarak metnin analiz sonuçlarını görün.\n\n"
+            "2. Dosya Aç ve Kaydet:\n"
+            "   - 'aç' butonuna tıklayarak bir metin dosyası açın.\n"
+            "   - 'kaydet' butonuna tıklayarak metin dosyanızı kaydedin.\n\n"
+            "3. Benzerlik Analizi:\n"
+            "   - 'Benzerlik Analizi' seçeneğini işaretleyin.\n"
+            "   - İki metni karşılaştırmak için ikinci metin kutusunu doldurun.\n"
+            "   - 'Analiz Yap' butonuna tıklayarak benzerlik sonuçlarını görün.\n\n"
+            "4. Temayı Değiştir:\n"
+            "   - Sol menüden temayı seçerek uygulamanın görünümünü değiştirebilirsiniz."
+        )
+        messagebox.showinfo("Kullanım Kılavuzu", mesaj)
+
+
 
 
 
